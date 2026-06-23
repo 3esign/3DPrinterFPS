@@ -131,11 +131,17 @@ function init() {
   });
 
   // Renderer
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.shadowMap.enabled = true;
-  container.appendChild(renderer.domElement);
+  try {
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    container.appendChild(renderer.domElement);
+  } catch (e) {
+    console.error("WebGL failed initialization:", e);
+    showWebGLFallbackMessage(container);
+    return;
+  }
 
   // Orbit Controls for 3rd Person
   orbitControls = new OrbitControls(camera, renderer.domElement);
@@ -879,6 +885,8 @@ function updateNozzleMotion(desiredDirection, delta) {
 function animate() {
   requestAnimationFrame(animate);
 
+  if (!renderer) return;
+
   const now = performance.now();
   const delta = Math.min((now - time) / 1000, 0.1); // clamp delta to prevent huge jumps
   time = now;
@@ -919,4 +927,49 @@ function clampPosition(pos) {
   if (pos.z > bounds) pos.z = bounds;
   if (pos.y < 0) pos.y = 0;
   if (pos.y > buildVolumeSize) pos.y = buildVolumeSize;
+}
+
+function showWebGLFallbackMessage(container) {
+  const startMenu = document.getElementById('start-menu');
+  if (startMenu) startMenu.style.display = 'none';
+  
+  const blocker = document.getElementById('blocker');
+  if (blocker) blocker.style.display = 'none';
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(15, 15, 25, 0.96);
+    border: 2px solid #ff3366;
+    border-radius: 12px;
+    padding: 30px;
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    text-align: center;
+    max-width: 500px;
+    box-shadow: 0 0 30px rgba(255, 51, 102, 0.4);
+    z-index: 100000;
+  `;
+  overlay.innerHTML = `
+    <h2 style="color: #ff3366; margin-bottom: 15px; font-size: 24px; font-weight: 800;">⚠️ WebGL Support Required</h2>
+    <p style="color: #8888aa; line-height: 1.6; margin-bottom: 20px; text-align: left; font-size: 14px;">
+      This 3D Printer Simulator runs entirely in 3D using your graphics card. Your browser reports that **WebGL is disabled or unsupported**.
+    </p>
+    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; text-align: left; font-size: 13px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08);">
+      <strong style="color: #33ccff; display: block; margin-bottom: 8px;">How to enable WebGL in Google Chrome:</strong>
+      <ol style="padding-left: 20px; color: #ccc; line-height: 1.6;">
+        <li style="margin-bottom: 4px;">Copy and paste <code style="background: rgba(0,0,0,0.5); padding: 2px 5px; border-radius: 3px; font-family: monospace; color: #ff88aa;">chrome://settings/system</code> into your Chrome address bar.</li>
+        <li style="margin-bottom: 4px;">Turn on <strong>"Use graphics acceleration when available"</strong> (Use hardware acceleration).</li>
+        <li style="margin-bottom: 4px;">Click the <strong>Relaunch</strong> button next to it.</li>
+        <li>Refresh this page!</li>
+      </ol>
+    </div>
+    <button onclick="window.location.reload()" style="background: linear-gradient(135deg, #ff3366, #ff0055); border: none; padding: 12px 28px; border-radius: 8px; color: white; font-weight: 600; cursor: pointer; font-family: inherit; font-size: 14px; box-shadow: 0 4px 15px rgba(255, 51, 102, 0.4); transition: transform 0.2s;">
+      Reload Page
+    </button>
+  `;
+  container.appendChild(overlay);
 }

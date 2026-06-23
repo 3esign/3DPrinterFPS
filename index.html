@@ -5,6 +5,31 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>3D Printer Simulator</title>
+    <script>
+      (function() {
+        var debugLog = document.createElement('div');
+        debugLog.id = 'debug-log';
+        debugLog.style.cssText = 'position:fixed; top:10px; right:10px; width:320px; max-height:400px; overflow-y:auto; background:rgba(0,0,0,0.9); color:#ff3333; z-index:100000; font-family:monospace; font-size:11px; padding:12px; border:2px solid red; word-break:break-all; border-radius:5px; box-shadow:0 0 15px rgba(255,0,0,0.5);';
+        debugLog.innerHTML = '<h3 style="margin-top:0; border-bottom:1px solid red; padding-bottom:5px; color:#ff8888;">⚠️ Debug Log</h3>';
+        document.documentElement.appendChild(debugLog);
+        
+        function log(msg) {
+          debugLog.innerHTML += '<div style="margin-top:5px; border-bottom:1px dashed #551111; padding-bottom:3px;">' + msg + '</div>';
+        }
+        
+        window.onerror = function(message, source, lineno, colno, error) {
+          log('ERR: ' + message + ' (' + source + ':' + lineno + ':' + colno + ')');
+        };
+        window.addEventListener('unhandledrejection', function(event) {
+          log('REJ: ' + event.reason);
+        });
+        const origError = console.error;
+        console.error = function() {
+          log('CONSOLE.ERR: ' + Array.from(arguments).map(x => typeof x === "object" ? JSON.stringify(x) : String(x)).join(' '));
+          origError.apply(console, arguments);
+        };
+      })();
+    </script>
     <link rel="stylesheet" href="./style.css">
   </head>
   <body>
