@@ -8,7 +8,7 @@ import puppeteer from 'puppeteer';
   page.on('pageerror', error => console.error('PAGE ERROR:', error.message));
 
   try {
-    await page.goto('http://localhost:5174/', { waitUntil: 'networkidle0' });
+    await page.goto('http://localhost:4173/', { waitUntil: 'networkidle0' });
     console.log('Page loaded successfully');
     
     // Simulate pressing V to enter 3rd person

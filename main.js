@@ -140,7 +140,9 @@ function init() {
   orbitControls.enabled = false;
   orbitControls.enableDamping = true;
   orbitControls.dampingFactor = 0.05;
-  orbitControls.maxPolarAngle = Math.PI / 2 - 0.05; // Don't go below ground
+  const lockedPolarAngle = Math.atan2(30, 20); // Maintain fixed vertical angle
+  orbitControls.minPolarAngle = lockedPolarAngle; 
+  orbitControls.maxPolarAngle = lockedPolarAngle;
   orbitControls.mouseButtons = {
     LEFT: THREE.MOUSE.NONE,
     MIDDLE: THREE.MOUSE.DOLLY,
