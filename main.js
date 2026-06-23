@@ -219,7 +219,7 @@ function setupInstancedMeshes() {
   printMesh.castShadow = true;
   printMesh.receiveShadow = true;
   printMesh.frustumCulled = false;
-  scene.add(printMesh);
+  // scene.add(printMesh); // Do not add to scene yet, to prevent empty geometry WebGL crashes
 }
 
 function createTextSprite(text, color = '#d7f5ff') {
@@ -690,12 +690,19 @@ function rebuildPrintGeometry() {
 
   printStrokes.forEach(stroke => appendBeadForStroke(stroke, profile, vertices, indices));
 
+  if (vertices.length === 0) {
+    if (printMesh.parent) scene.remove(printMesh);
+    return;
+  }
+
   printGeometry.dispose();
   printGeometry = new THREE.BufferGeometry();
   printGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
   printGeometry.setIndex(indices);
   printGeometry.computeVertexNormals();
   printMesh.geometry = printGeometry;
+
+  if (!printMesh.parent) scene.add(printMesh);
 }
 
 function printPoint() {

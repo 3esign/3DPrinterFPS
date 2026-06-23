@@ -8,28 +8,13 @@ import puppeteer from 'puppeteer';
   page.on('pageerror', error => console.error('PAGE ERROR:', error.message));
 
   try {
-    await page.goto('http://localhost:4173/', { waitUntil: 'networkidle0' });
+    await page.setViewport({ width: 1280, height: 720 });
+    await page.goto('https://3dfps-a0pg577i8-3esigns-projects.vercel.app', { waitUntil: 'networkidle0' });
     console.log('Page loaded successfully');
     
-    // Simulate pressing V to enter 3rd person
-    await page.keyboard.press('v');
-    console.log('Pressed V');
-    
-    // Simulate clicking in the center of the screen
-    await page.mouse.move(500, 500);
-    await page.mouse.down();
-    await page.mouse.up();
-    console.log('Clicked mouse');
-    
-    // Simulate holding mouse and moving W
-    await page.mouse.down();
-    await page.keyboard.down('w');
-    await new Promise(r => setTimeout(r, 1000)); // hold W for 1s
-    await page.keyboard.up('w');
-    await page.mouse.up();
-    console.log('Moved W while printing');
-
-    await new Promise(r => setTimeout(r, 1000));
+    // Take screenshot
+    await page.screenshot({ path: 'screenshot_prod.png' });
+    console.log('Screenshot saved to screenshot_prod.png');
   } catch (e) {
     console.error('Test script error:', e);
   } finally {
