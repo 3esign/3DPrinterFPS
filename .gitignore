@@ -12,7 +12,7 @@ dist
 dist-ssr
 .gitlocal
 .npm-cache
-git-askpass-*.ps1
+git-askpass-*
 smooth-path-check.png
 *.local
 
@@ -26,3 +26,5 @@ smooth-path-check.png
 *.njsproj
 *.sln
 *.sw?
+
+.vercel
