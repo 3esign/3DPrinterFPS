@@ -103,7 +103,9 @@ function init() {
   scene.add(nozzleVisual);
 
   // Camera
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const width = window.innerWidth || 1;
+  const height = window.innerHeight || 1;
+  camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
   camera.position.set(0, 10, 45); // Start closer and lower so the build plate and nozzle are visible
   camera.lookAt(0, 0, 0); // Point towards the center of the build plate
 
@@ -197,6 +199,9 @@ function init() {
   
   // UI Handlers
   setupUI();
+
+  // Position camera initially relative to nozzle
+  updateCameraForNozzle();
 }
 
 function setupInstancedMeshes() {
@@ -556,9 +561,11 @@ function onKeyUp(event) {
 }
 
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  const width = window.innerWidth || 1;
+  const height = window.innerHeight || 1;
+  camera.aspect = width / height;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(width, height);
 }
 
 window.addEventListener('blur', clearMotionState);

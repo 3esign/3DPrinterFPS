@@ -33,6 +33,12 @@ body {
   z-index: 1;
 }
 
+#app canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 
 
 #ui-container {
