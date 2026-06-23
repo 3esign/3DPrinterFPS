@@ -206,6 +206,7 @@ function init() {
 
 function setupInstancedMeshes() {
   printGeometry = new THREE.BufferGeometry();
+  printGeometry.setAttribute('position', new THREE.Float32BufferAttribute([], 3));
   const material = new THREE.MeshStandardMaterial({
     color: currentColor,
     roughness: 0.36,
