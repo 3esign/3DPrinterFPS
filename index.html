@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Printer Simulator</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <div id="app"></div>
+    
+    <div id="ui-container">
+      <div class="panel" id="sidebar">
+        <h2>3D PRINT SIM</h2>
+        
+        <div class="control-group">
+          <label>Filament Color</label>
+          <div class="color-picker" id="colorPicker">
+            <div class="color-swatch active" style="background: #ffffff" data-color="#ffffff"></div>
+            <div class="color-swatch" style="background: #ff3366" data-color="#ff3366"></div>
+            <div class="color-swatch" style="background: #33ccff" data-color="#33ccff"></div>
+            <div class="color-swatch" style="background: #33ff99" data-color="#33ff99"></div>
+            <div class="color-swatch" style="background: #ffcc00" data-color="#ffcc00"></div>
+            <div class="color-swatch" style="background: #000000" data-color="#000000"></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Layer Width</label>
+          <input type="range" id="sizeSlider" min="0.5" max="10" step="0.5" value="2" />
+          <span id="sizeValue">2mm</span>
+        </div>
+
+        <div class="control-group">
+          <label>Layer Height</label>
+          <input type="range" id="heightSlider" min="0.1" max="2" step="0.1" value="0.2" />
+          <span id="heightValue">0.2mm</span>
+        </div>
+        <div class="control-group compact-group">
+          <label>Print Speed</label>
+          <input type="range" id="speedSlider" min="20" max="140" step="5" value="65" />
+          <span id="speedValue">65mm/s</span>
+        </div>
+
+        <div class="control-group compact-group">
+          <label>Nozzle Temp</label>
+          <input type="range" id="tempSlider" min="180" max="260" step="5" value="210" />
+          <span id="tempValue">210C</span>
+        </div>
+
+        <div class="control-group compact-group">
+          <label>Flow Rate</label>
+          <input type="range" id="flowSlider" min="70" max="130" step="5" value="100" />
+          <span id="flowValue">100%</span>
+        </div>
+
+        <div class="control-group compact-group">
+          <label>Acceleration</label>
+          <input type="range" id="accelSlider" min="200" max="2500" step="100" value="900" />
+          <span id="accelValue">900mm/s2</span>
+        </div>
+
+        <div class="control-group compact-group">
+          <label class="toggle-row" for="orbitPathToggle">
+            <span id="orbitPathLabel">View Steers Path: Off</span>
+            <input type="checkbox" id="orbitPathToggle" />
+            <span class="toggle-track" aria-hidden="true"></span>
+          </label>
+        </div>
+
+        <div class="control-group info-panel">
+          <label>Printer Status</label>
+          <div class="status-box">
+            <div class="status-row">
+              <span>Nozzle Z:</span>
+              <span id="nozzleHeightValue" class="highlight">0.20mm</span>
+            </div>
+            <div class="status-row">
+              <span>Filament:</span>
+              <span id="filamentUsedValue">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="zoom-controls">
+          <button id="zoomInBtn" class="btn icon-btn" title="Zoom in" aria-label="Zoom in">+ Zoom</button>
+          <button id="zoomOutBtn" class="btn icon-btn" title="Zoom out" aria-label="Zoom out">- Zoom</button>
+        </div>
+
+
+        <button id="viewToggleBtn" class="btn">
+          Switch to 3rd Person (V)
+        </button>
+
+        <button id="resetBtn" class="btn danger-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><polyline points="16 3 21 8 16 13"></polyline><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><polyline points="8 21 3 16 8 11"></polyline></svg>
+          Reset Print
+        </button>
+
+        <button id="exportBtn" class="btn primary-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export STL
+        </button>
+      </div>
+
+      <div class="panel" id="instructions">
+        <h3>Controls</h3>
+        <ul>
+          <li><span class="key">Click</span> to Start/Lock Pointer</li>
+          <li><span class="key">WASD</span> Move Nozzle</li>
+          <li><span class="key">Space</span> Jump Up 1 Layer</li>
+          <li><span class="key">Shift</span> Jump Down 1 Layer</li>
+          <li><span class="key">L-Click</span> Extrude Filament</li>
+          <li><span class="key">V</span> Toggle View</li>
+          <li><span class="key">ESC</span> Show Menu</li>
+        </ul>
+      </div>
+      
+      <div id="blocker">
+        <div id="start-menu">
+          <h1>3D PRINT SIM</h1>
+          <p>Click anywhere to start driving the nozzle.</p>
+        </div>
+      </div>
+    </div>
+    
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
